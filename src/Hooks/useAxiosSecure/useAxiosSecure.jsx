@@ -10,9 +10,9 @@ import useAuthProvider from "../useAuthProvider/useAuthProvider";
 const useAxiosSecure = () => {
   const {logOut} = useAuthProvider()
   const navigate = useNavigate()
-  axiosSecure.interceptors.response.use(function (config){
+  axiosSecure.interceptors.response.use( (config) =>{
     return config
-  }, function (error){
+  },  (error)=>{
 
     console.log("error in interceptor",error.response.status);
     if(error.response.status === 401 || error.response.status === 403)

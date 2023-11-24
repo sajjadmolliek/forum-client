@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
+
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
@@ -15,13 +15,15 @@ import logo from "../../assets/logo.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { Badge } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 import useAuthProvider from "../../Hooks/useAuthProvider/useAuthProvider";
 
 const Navbar = () => {
-  const { user,logOut } = useAuthProvider();
-  const Navigate = useNavigate()
+  const { user, logOut } = useAuthProvider();
+  const Navigate = useNavigate();
+  const userName = user?.displayName
   const pages = ["Home", "Membership"];
-  const settings = ["Profile", "Account", "Dashboard", "login"];
+  const settings = ["Name",  "Dashboard", "login"];
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const handleOpenNavMenu = (event) => {
@@ -38,10 +40,10 @@ const Navbar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  const handleLogout = () =>{
-    logOut()
-    Navigate("/login")
-  }
+  const handleLogout = () => {
+    logOut();
+    Navigate("/login");
+  };
 
   return (
     <AppBar position="static" color="transparent">
@@ -52,11 +54,11 @@ const Navbar = () => {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               ml: 4,
-              // py:2,
+              py:2,
               display: { xs: "none", md: "flex", color: "blue" },
               fontFamily: "monospace",
               fontWeight: 700,
@@ -114,13 +116,17 @@ const Navbar = () => {
               )}
             </Menu>
           </Box>
-          <img src={logo} alt="Logo" className=" flex  lg:hidden" />
+          <img
+            src={logo}
+            alt="Logo"
+            className=" flex lg:hidden w-[3rem] py-5"
+          />
 
           <Typography
             variant="h5"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none", color: "blue" },
@@ -158,18 +164,33 @@ const Navbar = () => {
               )
             )}
           </Box>
-          <Box sx={{ flexGrow: 0.05 }}>
+          <Box>
             <Badge badgeContent={4} color="primary">
               <NotificationsIcon sx={{ color: "blue" }} />
             </Badge>
           </Box>
 
           <Box sx={{ flexGrow: 0.1 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
+            {user ? (
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <img
+                    className="rounded-full w-[3rem] ml-[1rem]"
+                    src={user?.photoURL}
+                    alt="User Image"
+                  />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <Link to={"/login"}><Button
+                sx={{ ml: 5, background: "blue" }}
+                variant="contained"
+                endIcon={<SendIcon />}
+              >
+                Join Us
+              </Button></Link>
+            )}
+
             <Menu
               sx={{ mt: "45px" }}
               id="menu-appbar"
@@ -188,18 +209,18 @@ const Navbar = () => {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                {user && setting === "login" ? (
-                  <Typography onClick={handleLogout}  textAlign="center" >
-                    LogOut
-                  </Typography>
-                ) : (
-                  <Link to={"/login"}>
-                    <Typography textAlign="center" >
-                      {setting}
+               
+                  {user && setting === "login" ? (
+                    <Typography onClick={handleLogout} textAlign="center">
+                      Logout
                     </Typography>
-                  </Link>
-                )
-                }
+                  ) : 
+                  user && setting === "Name" ?  userName:
+                  (
+                    <Link to={`/${setting}`}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </Link>
+                  )}
                 </MenuItem>
               ))}
             </Menu>

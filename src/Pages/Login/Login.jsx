@@ -10,10 +10,13 @@ import HelmateTittle from "../../Components/Shared/HelmateTittle/HelmateTittle";
 import Swal from "sweetalert2";
 import { RotatingLines } from "react-loader-spinner";
 import ExtraLogin from "../../Components/Shared/ExtraLogin/ExtraLogin";
+import { AwesomeButton } from "react-awesome-button";
+import "react-awesome-button/dist/styles.css";
 
 const Login = () => {
   const [loginDesable, setLoginDesable] = useState(true);
   const [captchaLoad, setCaptchaLoad] = useState(true);
+  const [wrong, setWrong] = useState(false);
   const { userLogin } = useAuthProvider();
   const location = useLocation();
   const navigate = useNavigate();
@@ -41,9 +44,11 @@ const Login = () => {
   const handleValidetCaptcha = (e) => {
     const user_captcha_value = e.target.value;
     if (validateCaptcha(user_captcha_value) == true) {
+      setWrong(false);
       setCaptchaLoad(false);
       setLoginDesable(false);
     } else {
+      setWrong(true);
       setCaptchaLoad(true);
       setLoginDesable(true);
     }
@@ -54,14 +59,6 @@ const Login = () => {
       <HelmateTittle helmetTittle={"Bistro Boss | Login"}></HelmateTittle>
       <div className="hero min-h-screen bg-base-200">
         <div className="hero-content flex-col lg:flex-row-reverse">
-          <div className="text-center lg:text-left">
-            <h1 className="text-5xl font-bold">Login now!</h1>
-            <p className="py-6">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
-              et a id nisi.
-            </p>
-          </div>
           <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
             <form onSubmit={handleSubmit} className="card-body">
               <div className="form-control">
@@ -118,14 +115,30 @@ const Login = () => {
                   className="input input-bordered"
                   required
                 />
+                {wrong ? (
+                  <label className="label">
+                    <span className="text-red-600">
+                      Captcha Typing is Wrong Rewrite The Captcha
+                    </span>
+                  </label>
+                ) : (
+                  ""
+                )}
               </div>
               <div className="form-control mt-6">
-                <input
+                
+                <AwesomeButton
+                  disabled={loginDesable}
+                  type="primary"
+                >
+                  Login
+                </AwesomeButton>
+                {/* <input
                   disabled={loginDesable}
                   value={"login"}
                   type="submit"
                   className="btn btn-primary"
-                />
+                /> */}
               </div>
             </form>
             <p className="text-center mb-10">
@@ -141,11 +154,18 @@ const Login = () => {
             </p>
             <ExtraLogin></ExtraLogin>
           </div>
+          <div className="text-center lg:text-left">
+            <h1 className="text-5xl font-bold">Login now!</h1>
+            <p className="py-6">
+              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
+              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
+              et a id nisi.
+            </p>
+          </div>
         </div>
       </div>
     </>
   );
 };
-
 
 export default Login;

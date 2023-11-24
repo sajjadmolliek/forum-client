@@ -5,6 +5,7 @@ import useAuthProvider from "../../Hooks/useAuthProvider/useAuthProvider";
 import Swal from "sweetalert2";
 import useAxiousPublic from "../../Hooks/useAxiousPublic/useAxiousPublic";
 import ExtraLogin from "../../Components/Shared/ExtraLogin/ExtraLogin";
+import { AwesomeButton } from "react-awesome-button";
 
 const Register = () => {
   const { userSignUp, updateUserProfile } = useAuthProvider();
@@ -33,13 +34,13 @@ const Register = () => {
       })
       .catch((error) => {
         const errorMessage = error?.message;
-        Swal.fire("Opps!!!!",  errorMessage ,"error");
+        Swal.fire("Opps!!!!", errorMessage, "error");
       });
   };
 
   return (
     <>
-      <HelmateTittle helmetTittle={"Bistro Boss | Register"}></HelmateTittle>
+      <HelmateTittle helmetTittle={"Forum | Register"}></HelmateTittle>
       <div className="hero min-h-screen bg-base-200">
         <div className="hero-content flex-col lg:flex-row-reverse">
           <div className="text-center lg:text-left">
@@ -119,11 +120,7 @@ const Register = () => {
                 </label>
               </div>
               <div className="form-control mt-6">
-                <input
-                  value={"Sign Up"}
-                  type="submit"
-                  className="btn btn-primary"
-                />
+                <AwesomeButton type="primary">Login</AwesomeButton>
               </div>
             </form>
             <p className="text-center mb-10">
@@ -141,6 +138,5 @@ const Register = () => {
     </>
   );
 };
-
 
 export default Register;

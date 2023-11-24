@@ -45,22 +45,22 @@ const AuthProvider = ({ children }) => {
   };
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      // const sendingUser = currentUser?.email;
+      const sendingUser = currentUser?.email;
       setLoading(false);
       setUser(currentUser);
 
-      // if (currentUser) {
-      //   axiosPublic
-      //     .post("/jwt",{ sendingUser })
-      //     .then(() => {
-      //     });
-      // }
-      // if (currentUser === null) {
-      //   axiosPublic
-      //     .post("/logout",{ sendingUser })
-      //     .then(() => {
-      //     });
-      // }
+      if (currentUser) {
+        axiosPublic
+          .post("/jwt",{ sendingUser })
+          .then(() => {
+          });
+      }
+      if (currentUser === null) {
+        axiosPublic
+          .post("/logout",{ sendingUser })
+          .then(() => {
+          });
+      }
     });
     return () => {
       return unsubscribe();
