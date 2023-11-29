@@ -7,7 +7,6 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
@@ -17,15 +16,28 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { Badge } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import useAuthProvider from "../../Hooks/useAuthProvider/useAuthProvider";
+import useUserData from "../../Hooks/useUserData/useUserData";
+import useAxiousPublic from "../../Hooks/useAxiousPublic/useAxiousPublic";
 
 const Navbar = () => {
   const { user, logOut } = useAuthProvider();
+  const [, admin, setAdmin] = useUserData();
+
   const Navigate = useNavigate();
-  const userName = user?.displayName
+  const userName = user?.displayName;
   const pages = ["Home", "Membership"];
-  const settings = ["Name",  "Dashboard", "login"];
+  const settings = ["Name", "Dashboard", "login"];
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const axiosPublic = useAxiousPublic();
+  const [notify, setNotify] = React.useState(0);
+
+  React.useEffect(() => {
+    axiosPublic
+      .get(`/notification?email=${user?.email}`)
+      .then((res) => setNotify(res.data.notifications));
+  }, [user?.email,axiosPublic,notify]);
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -42,8 +54,21 @@ const Navbar = () => {
   };
   const handleLogout = () => {
     logOut();
+    setAdmin(false);
     Navigate("/login");
   };
+
+  // Get User Role For Go To Dashboard:
+  const handleSeeNotification = ( ) =>{
+    axiosPublic
+    .patch(`/patchNotification?email=${user?.email}`)
+    .then(() => {
+  
+      setNotify(0);
+    });
+
+    
+  }
 
   return (
     <AppBar position="static" color="transparent">
@@ -58,7 +83,7 @@ const Navbar = () => {
             sx={{
               mr: 2,
               ml: 4,
-              py:2,
+              py: 2,
               display: { xs: "none", md: "flex", color: "blue" },
               fontFamily: "monospace",
               fontWeight: 700,
@@ -67,7 +92,7 @@ const Navbar = () => {
               textDecoration: "none",
             }}
           >
-            ChitChat
+            <p className="font-bold font-mono text-3xl">ChitChat</p>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -138,7 +163,7 @@ const Navbar = () => {
               textDecoration: "none",
             }}
           >
-            ChitChat
+            <p className="font-bold font-mono text-3xl">ChitChat</p>
           </Typography>
           <Box sx={{ flexGrow: 1 }}></Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
@@ -164,11 +189,19 @@ const Navbar = () => {
               )
             )}
           </Box>
-          <Box>
-            <Badge badgeContent={4} color="primary">
-              <NotificationsIcon sx={{ color: "blue" }} />
-            </Badge>
-          </Box>
+          {user ? (
+            <>
+              <NavLink to={"/notification"}>
+              <Box onClick={handleSeeNotification}>
+                <Badge badgeContent={notify} color="primary" sx={{ mr: 2 }}>
+                  <NotificationsIcon sx={{ color: "blue", fontSize: "2rem" }} />
+                </Badge>
+              </Box>
+              </NavLink>
+            </>
+          ) : (
+            ""
+          )}
 
           <Box sx={{ flexGrow: 0.1 }}>
             {user ? (
@@ -177,18 +210,20 @@ const Navbar = () => {
                   <img
                     className="rounded-full w-[3rem] ml-[1rem]"
                     src={user?.photoURL}
-                    alt="User Image"
+                    alt="User"
                   />
                 </IconButton>
               </Tooltip>
             ) : (
-              <Link to={"/login"}><Button
-                sx={{ ml: 5, background: "blue" }}
-                variant="contained"
-                endIcon={<SendIcon />}
-              >
-                Join Us
-              </Button></Link>
+              <Link to={"/login"}>
+                <Button
+                  sx={{ ml: 5, background: "blue" }}
+                  variant="contained"
+                  endIcon={<SendIcon />}
+                >
+                  Join Us
+                </Button>
+              </Link>
             )}
 
             <Menu
@@ -209,15 +244,18 @@ const Navbar = () => {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-               
                   {user && setting === "login" ? (
                     <Typography onClick={handleLogout} textAlign="center">
                       Logout
                     </Typography>
-                  ) : 
-                  user && setting === "Name" ?  userName:
-                  (
-                    <Link to={`/${setting}`}>
+                  ) : user && setting === "Name" ? (
+                    userName
+                  ) : user && admin && setting === "Dashboard" ? (
+                    <Link to={`/adminDash`}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </Link>
+                  ) : (
+                    <Link to={`/userProfile`}>
                       <Typography textAlign="center">{setting}</Typography>
                     </Link>
                   )}

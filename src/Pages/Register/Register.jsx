@@ -6,24 +6,42 @@ import Swal from "sweetalert2";
 import useAxiousPublic from "../../Hooks/useAxiousPublic/useAxiousPublic";
 import ExtraLogin from "../../Components/Shared/ExtraLogin/ExtraLogin";
 import { AwesomeButton } from "react-awesome-button";
+import axios from "axios";
 
+// import Hosting image URL
+const image_hosting = import.meta.env.VITE_IMAGE_KEY;
+const image_hosting_api = `https://api.imgbb.com/1/upload?expiration=600&key=${image_hosting}`;
 const Register = () => {
   const { userSignUp, updateUserProfile } = useAuthProvider();
   const axiosPublic = useAxiousPublic();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const navigate = useNavigate();
 
-  const onSubmit = (data, e) => {
+  const onSubmit = async (data, e) => {
+    const formData = new FormData();
+    formData.append("image", data?.photo[0]);
+
+    const res = await axios.post(image_hosting_api, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    const image = res.data.data.display_url;
+
     userSignUp(data.email, data.password)
       .then(() => {
-        updateUserProfile(data.name, data.photo);
-
+        updateUserProfile(data.name, image);
         axiosPublic
-          .post("/users", { name: data.name, email: data.email })
+          .post("/users", {
+            name: data.name,
+            email: data.email,
+            image: image,
+            membership: "bronze",
+          })
           .then((res) => {
             if (res.data.acknowledged) {
               Swal.fire("Successfully", "You create the account", "success");
@@ -68,17 +86,19 @@ const Register = () => {
                   className="input input-bordered"
                 />
               </div>
-              <div className="form-control">
+              <div className="my-6">
                 <label className="label">
-                  <span className="label-text">Photo Url</span>
+                  <span className="label-text ">
+                    Choose a Photo for Your Profile*
+                  </span>
                 </label>
                 <input
-                  name="photo"
-                  type="text"
-                  {...register("phot")}
-                  placeholder="User Photo Url"
-                  className="input input-bordered"
-                />
+                  type="file"
+                  {...register("photo", { required: true })}
+                  placeholder="Choose a file"
+                  className="file-input file-input-bordered w-full"
+                />{" "}
+                {errors.photo && <span>This field is required</span>}
               </div>
               <div className="form-control">
                 <label className="label">
@@ -120,7 +140,7 @@ const Register = () => {
                 </label>
               </div>
               <div className="form-control mt-6">
-                <AwesomeButton type="primary">Login</AwesomeButton>
+                <AwesomeButton type="primary">Register</AwesomeButton>
               </div>
             </form>
             <p className="text-center mb-10">

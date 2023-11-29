@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import useCustomeHook from "../useCustomeHook";
 
 const axiosSecure = axios.create({
-  baseURL: "https://online-study-explore.vercel.app",
+  baseURL: "http://localhost:5007",
   withCredentials: true,
 });
 

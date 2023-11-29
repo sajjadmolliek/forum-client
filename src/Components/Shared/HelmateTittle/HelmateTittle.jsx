@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Helmet } from 'react-helmet';
 
 const HelmateTittle = ({helmetTittle}) => {

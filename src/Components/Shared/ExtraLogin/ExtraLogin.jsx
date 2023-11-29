@@ -1,13 +1,21 @@
 import { FcGoogle } from "react-icons/fc";
 import useAuthProvider from "../../../Hooks/useAuthProvider/useAuthProvider";
 import useAxiousPublic from "../../../Hooks/useAxiousPublic/useAxiousPublic";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const ExtraLogin = () => {
   const { googleLogin } = useAuthProvider();
   const axiosPublic = useAxiousPublic();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || "/";
+
+  const navigateNow = () => {
+    setTimeout(() => {
+      navigate(from, { replace: true });
+    }, 1);
+  };
 
   const googleResister = () => {
     googleLogin()
@@ -17,11 +25,12 @@ const ExtraLogin = () => {
             name: res.user.displayName,
             email: res.user.email,
             image: res.user.photoURL,
+            membership: "silver",
           })
           .then((res) => {
-            if (res.data.acknowledged) {
+            if (res.data) {
+              navigateNow();
               Swal.fire("Successfully", "Log in", "success");
-              navigate(location.state ? location.state : "/");
             }
           });
       })

@@ -17,7 +17,6 @@ const provider = new GoogleAuthProvider();
 export const AuthContext = createContext(null);
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState([]);
-
   const [loading, setLoading] = useState(true);
   const axiosPublic = useAxiousPublic();
   const userSignUp = (email, password) => {
@@ -50,16 +49,10 @@ const AuthProvider = ({ children }) => {
       setUser(currentUser);
 
       if (currentUser) {
-        axiosPublic
-          .post("/jwt",{ sendingUser })
-          .then(() => {
-          });
+        axiosPublic.post("/jwt", { sendingUser }).then(() => {});
       }
       if (currentUser === null) {
-        axiosPublic
-          .post("/logout",{ sendingUser })
-          .then(() => {
-          });
+        axiosPublic.post("/logout", { sendingUser }).then(() => {});
       }
     });
     return () => {
@@ -84,7 +77,5 @@ const AuthProvider = ({ children }) => {
     <AuthContext.Provider value={context}>{children}</AuthContext.Provider>
   );
 };
-
-
 
 export default AuthProvider;

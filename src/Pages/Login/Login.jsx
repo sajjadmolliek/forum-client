@@ -18,8 +18,16 @@ const Login = () => {
   const [captchaLoad, setCaptchaLoad] = useState(true);
   const [wrong, setWrong] = useState(false);
   const { userLogin } = useAuthProvider();
-  const location = useLocation();
+
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || "/";
+
+  const navigateNow = () => {
+    setTimeout(() => {
+      navigate(from, { replace: true });
+    }, 1);
+  };
 
   useEffect(() => {
     loadCaptchaEnginge(6);
@@ -34,7 +42,7 @@ const Login = () => {
       .then(() => {
         Swal.fire("Successfully", "Log in", "success");
         form.reset();
-        navigate(location.state ? location.state : "/");
+        navigateNow();
       })
       .catch((error) => {
         const errorMassage = error.message;
@@ -97,7 +105,7 @@ const Login = () => {
                   </label>
                   {captchaLoad ? (
                     <RotatingLines
-                      strokeColor="orange"
+                      strokeColor="#1976D2"
                       strokeWidth="5"
                       animationDuration="0.75"
                       width="36"
@@ -126,19 +134,9 @@ const Login = () => {
                 )}
               </div>
               <div className="form-control mt-6">
-                
-                <AwesomeButton
-                  disabled={loginDesable}
-                  type="primary"
-                >
+                <AwesomeButton disabled={loginDesable} type="primary">
                   Login
                 </AwesomeButton>
-                {/* <input
-                  disabled={loginDesable}
-                  value={"login"}
-                  type="submit"
-                  className="btn btn-primary"
-                /> */}
               </div>
             </form>
             <p className="text-center mb-10">
