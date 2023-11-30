@@ -108,6 +108,7 @@ const CommentDetails = () => {
       return res.data;
     },
   });
+  
 
   const handleReport = async(row) => {
     const reportData = {

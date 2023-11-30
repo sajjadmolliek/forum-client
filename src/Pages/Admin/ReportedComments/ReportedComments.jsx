@@ -3,9 +3,9 @@ import useAxiousPublic from "../../../Hooks/useAxiousPublic/useAxiousPublic";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import Swal from "sweetalert2";
+import { Button } from "@mui/material";
 
 const ReportedComments = () => {
   const axiosPublic = useAxiousPublic();
@@ -18,29 +18,67 @@ const ReportedComments = () => {
     },
   });
 
-  console.log(reports);
+  const handleMembership = (email) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to Remove His Membership Admin?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosPublic.patch(`/membershipCancel/${email}`).then((res) => {
+          if (res.data.modifiedCount > 0) {
+            Swal.fire({
+              title: "Update!",
+              text: `( ${email} ) is bronze Member Now`,
+              icon: "success",
+            });
+          }
+        });
+      }
+    });
+  };
 
   return (
     <div className="flex flex-wrap mx-auto gap-6 justify-center items-center ">
-      {reports.map((report) => (
-        <Card sx={{ maxWidth: 345 }} key={report?._id} className="mb-8 w-[15rem]">
-          <CardMedia
-            sx={{ height: 140 }}
-            image="/static/images/cards/contemplative-reptile.jpg"
-            title="green iguana"
-          />
+      {reports?.map((report) => (
+        <Card key={report?._id} className="mb-8 w-[70rem] hover:shadow-xl">
           <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              Lizard
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Lizards are a widespread group of squamate reptiles, with over
-              6,000 species, ranging across all continents except Antarctica
-            </Typography>
+            <div className="flex justify-between items-center">
+              <Typography gutterBottom variant="h6" component="div">
+                Reporter Name: {report?.reporterName}
+              </Typography>
+              <Typography gutterBottom variant="h7" component="div">
+                Reporter Email: {report?.reporter}
+              </Typography>
+            </div>
+            <div className="flex justify-between items-center">
+              <Typography gutterBottom variant="h7" component="div">
+                Comment Id: {report?.commentId}
+              </Typography>
+              <Typography gutterBottom variant="h7" component="div">
+                Commenter Email: {report?.commenter}
+              </Typography>
+            </div>
+            <div>
+              <Typography gutterBottom variant="h7" component="div">
+                Comment: {report?.comment}
+              </Typography>
+              <Typography gutterBottom variant="h7" component="div">
+                Report: {report?.report}
+              </Typography>
+            </div>
           </CardContent>
-          <CardActions>
-            <Button size="small">Share</Button>
-            <Button size="small">Learn More</Button>
+          <CardActions className="w-full flex justify-center">
+            <Button
+              variant="outlined"
+              onClick={() => handleMembership(report?.commenter)}
+            >
+              Cancel Membership
+            </Button>
           </CardActions>
         </Card>
       ))}
