@@ -44,7 +44,7 @@ const AdminProInfo = () => {
   const { data: AllPosts = [] } = useQuery({
     queryKey: ["AllPostManage"],
     queryFn: async () => {
-      const res2 = await axiosPublic.get(`/posts/allPost?search=all`);
+      const res2 = await axiosPublic.get(`/totalPosts`);
 
       return [res2.data];
     },
