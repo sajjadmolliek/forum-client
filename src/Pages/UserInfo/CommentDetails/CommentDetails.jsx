@@ -15,7 +15,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { Button, TableHead, Tooltip } from "@mui/material";
 import Select from "react-select";
-// import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import HeaderTittle from "../../../Components/Shared/HeaderTittle/HeaderTittle";
 
 import Dialog from "@mui/material/Dialog";
@@ -45,7 +45,7 @@ const CommentDetails = () => {
   const [feedbackGiven, setFeedbackGiven] = React.useState({});
   const [fullComment, setFullComment] = React.useState({});
   const [open, setOpen] = React.useState(false);
-  const {user} = useAuthProvider();
+  const { user } = useAuthProvider();
 
   const handleClickOpen = (commentId, comment) => {
     setOpen(true);
@@ -74,7 +74,6 @@ const CommentDetails = () => {
   const handleChangeDense = (event) => {
     setDense(event.target.checked);
   };
-  
 
   const headCells = [
     {
@@ -106,27 +105,26 @@ const CommentDetails = () => {
     queryKey: ["allComments"],
     queryFn: async () => {
       const res = await axiosPublic.get(`/comments/${id}`);
-      // console.log(res.data)
       return res.data;
     },
   });
 
-console.log(comment)
+  const handleReport = async(row) => {
+    const reportData = {
+      comment: row?.comment,
+      commentId: row?.commentId,
+      commenter: row?.commenter,
+      report: selectedOption.label,
+      reporter: user?.email,
+      reporterName: user?.displayName,
+    };
 
-  const handleReport = () => {
-    // console.log({hi:selectedOption.label});
-const reportData = {
-  comment: comment?.comment,
-  commentId:comment?.commentId,
-  commenter:comment?.commenter,
-  report: selectedOption.label,
-  reporter: user?.email,
-  reporterName: user?.displayName,
-}
-
-console.log(reportData)
-
-
+    const res = await axiosPublic.post(`/report/`,reportData)
+    
+      if(res.data.insertedId){
+        Swal.fire("Success","Successfully place report","success")
+      }
+   
 
     setFeedbackGiven({});
   };
@@ -268,9 +266,11 @@ console.log(reportData)
     );
   } else {
     return (
-      <div className="flex justify-center items-center"><h1 className="text-center text-3xl underline pb-10 font-mono font-bold">
-      No Comments in this relevant post
-    </h1></div>
+      <div className="flex justify-center items-center">
+        <h1 className="text-center text-3xl underline pb-10 font-mono font-bold">
+          No Comments in this relevant post
+        </h1>
+      </div>
     );
   }
 };
