@@ -68,8 +68,8 @@ const PostDetails = () => {
       if (res.data.modifiedCount > 0) {
         dataRefetch();
         Swal.fire({
-          title: "Update!",
-          text: `( ${user.displayName} ) is Gold Member Now`,
+          title: "Thanks to Like!",
+          text: `Hope yo will attest with us`,
           icon: "success",
         });
       }
@@ -84,9 +84,9 @@ const PostDetails = () => {
       if (res.data.modifiedCount > 0) {
         dataRefetch();
         Swal.fire({
-          title: "Update!",
-          text: `( ${user.displayName} ) is Gold Member Now`,
-          icon: "success",
+          title: "Sorry!",
+          text: `For our in-management`,
+          icon: "error",
         });
       }
     });

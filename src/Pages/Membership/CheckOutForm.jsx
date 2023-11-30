@@ -11,6 +11,8 @@ const CheckoutForm = () => {
   const { user } = useAuthProvider();
   const price = 50;
   const [clientSecret, setClientSecret] = useState("");
+
+  
   useEffect(() => {
     // Create PaymentIntent as soon as the page loads
     axiosPublic.post("/create-payment-intent", { price }).then((res) => {
@@ -69,8 +71,8 @@ const CheckoutForm = () => {
   };
 
   return (
-    <form className="border-2 p-20 border-orange-400" onSubmit={handleSubmit}>
-      <CardElement
+    <form className="border-2 p-20 border-blue-600" onSubmit={handleSubmit}>
+      <CardElement 
         options={{
           style: {
             base: {
@@ -88,7 +90,7 @@ const CheckoutForm = () => {
       />
       <div>
         <button
-          className="btn w-full bg-orange-400 text-white mt-20"
+          className="btn w-full bg-blue-700 text-white mt-20"
           type="submit"
           disabled={!stripe || !clientSecret}
         >

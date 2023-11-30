@@ -12,10 +12,10 @@ const Membership = () => {
     <div className="mt-20">
       <HelmateTittle helmetTittle={"Forum | membership | Payments"}></HelmateTittle>
       <HeaderTittle
-        heading={"Please Pay to Eat"}
+        heading={"Please Pay for membership"}
         tittle={"Payment"}
       ></HeaderTittle>
-      <div className="w-[25rem] md:w-[30rem] mx-auto mt-20">
+      <div className="w-[25rem] md:w-[30rem] mx-auto my-20 border ">
         <Elements stripe={stripePromise}>
           <CheckoutForm />
         </Elements>

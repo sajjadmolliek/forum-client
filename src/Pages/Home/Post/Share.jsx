@@ -62,7 +62,7 @@ const Share = ({ id }) => {
                     </div>
                     <div>
                       <WhatsappShareButton
-                        url={`http://localhost:5007/post/${id}`}
+                        url={`https://forum-server-five.vercel.app/post/${id}`}
                         className="Demo__some-network__share-button justify-center flex flex-col items-center"
                       >
                         <WhatsappIcon size={32} round />
@@ -71,7 +71,7 @@ const Share = ({ id }) => {
                     </div>
                     <div>
                       <LinkedinShareButton
-                        url={`http://localhost:5007/post/${id}`}
+                        url={`https://forum-server-five.vercel.app/post/${id}`}
                         className="Demo__some-network__share-button justify-center flex flex-col items-center"
                       >
                         <LinkedinIcon size={32} round />
@@ -80,7 +80,7 @@ const Share = ({ id }) => {
                     </div>
                     <div className="Demo__some-network justify-center flex flex-col items-center">
                       <TelegramShareButton
-                        url={`http://localhost:5007/post/${id}`}
+                        url={`https://forum-server-five.vercel.app/post/${id}`}
                         title={"title"}
                         className="Demo__some-network__share-button"
                       >

@@ -69,8 +69,7 @@ const MyPosts = () => {
     },
   });
 
-  const handleDelete =  (post) => {
-    
+  const handleDelete = (post) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -79,20 +78,18 @@ const MyPosts = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
-    }).then( async (result) => {
-      
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        const res = await axiosPublic.delete(`/deletePost/${post._id}`)
-        // .then((res) => {
-          if (res.data.deletedCount > 0) {
-            refetch();
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your Item has been deleted.",
-              icon: "success",
-            });
-          }
-        // });
+        const res = await axiosPublic.delete(`/deletePost/${post._id}`);
+
+        if (res.data.deletedCount > 0) {
+          refetch();
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your Item has been deleted.",
+            icon: "success",
+          });
+        }
       }
     });
   };
@@ -144,15 +141,13 @@ const MyPosts = () => {
                     <TableCell align="right" sx={{ textAlign: "center" }}>
                       {row.upVote}
                     </TableCell>
-                      <TableCell align="right" sx={{ textAlign: "center" }}>
-                    <Link to={`/userProfile/commentDetails/${row._id}`}>
-                    <Tooltip title="Comment">
-                   
-                    <CommentRoundedIcon />
-                      </Tooltip>
-                        
-                    </Link>
-                      </TableCell>
+                    <TableCell align="right" sx={{ textAlign: "center" }}>
+                      <Link to={`/userProfile/commentDetails/${row._id}`}>
+                        <Tooltip title="Comment">
+                          <CommentRoundedIcon />
+                        </Tooltip>
+                      </Link>
+                    </TableCell>
                     <TableCell align="right" sx={{ textAlign: "center" }}>
                       <Tooltip title="Delete">
                         <DeleteRoundedIcon onClick={() => handleDelete(row)} />

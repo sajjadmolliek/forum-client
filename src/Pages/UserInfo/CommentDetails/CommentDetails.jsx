@@ -24,6 +24,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
+import useAuthProvider from "../../../Hooks/useAuthProvider/useAuthProvider";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -44,6 +45,7 @@ const CommentDetails = () => {
   const [feedbackGiven, setFeedbackGiven] = React.useState({});
   const [fullComment, setFullComment] = React.useState({});
   const [open, setOpen] = React.useState(false);
+  const {user} = useAuthProvider();
 
   const handleClickOpen = (commentId, comment) => {
     setOpen(true);
@@ -72,10 +74,7 @@ const CommentDetails = () => {
   const handleChangeDense = (event) => {
     setDense(event.target.checked);
   };
-  const handleReport = () => {
-    console.log(selectedOption.label);
-    setFeedbackGiven({});
-  };
+  
 
   const headCells = [
     {
@@ -107,9 +106,30 @@ const CommentDetails = () => {
     queryKey: ["allComments"],
     queryFn: async () => {
       const res = await axiosPublic.get(`/comments/${id}`);
+      // console.log(res.data)
       return res.data;
     },
   });
+
+console.log(comment)
+
+  const handleReport = () => {
+    // console.log({hi:selectedOption.label});
+const reportData = {
+  comment: comment?.comment,
+  commentId:comment?.commentId,
+  commenter:comment?.commenter,
+  report: selectedOption.label,
+  reporter: user?.email,
+  reporterName: user?.displayName,
+}
+
+console.log(reportData)
+
+
+
+    setFeedbackGiven({});
+  };
   if (comment?.length > 0) {
     return (
       <Box sx={{ width: "100%", mt: 10 }}>

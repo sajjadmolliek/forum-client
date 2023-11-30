@@ -20,20 +20,47 @@ const Home = () => {
   const [search, setSearch] = useState("all");
   const [sort, setSort] = useState(true);
   const [posts, setPosts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [length, setLength] = useState(0);
+
+  const pagination = Math.ceil(length / 3);
+
+  const emptyArray = [];
+  for (let i = 1; i < pagination + 1; i++) {
+    emptyArray.push(i);
+  }
+
+  const handleNext = () => {
+    if (page < pagination) {
+      setPage(page + 1);
+    }
+  };
+  const handlePrevious = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  };
+  const handlePageClick = (page) => {
+    setPage(page);
+  };
 
   const handleShowall = () => {
     axiosPublic
-      .get(`/posts/allPost?search=${search}`)
-      .then((res) => setPosts(res.data));
+      .get(`/posts/allPost?search=${search}&page=${page}`)
+      .then((res) => {
+        setPosts(res.data.result);
+        setLength(res.data.dataLength);
+      });
   };
+
   const handleUpsort = () => {
-    axiosPublic.get(`/sort/upvote`).then((res) => {
+    axiosPublic.get(`/sort/upvote?page=${page}`).then((res) => {
       setPosts(res.data);
       setSort(false);
     });
   };
   const handleDownSort = () => {
-    axiosPublic.get(`/sort/downvote`).then((res) => {
+    axiosPublic.get(`/sort/downvote?page=${page}`).then((res) => {
       setPosts(res.data);
       setSort(true);
     });
@@ -41,9 +68,12 @@ const Home = () => {
 
   useEffect(() => {
     axiosPublic
-      .get(`/posts/allPost?search=${search}`)
-      .then((res) => setPosts(res.data));
-  }, [axiosPublic, search]);
+      .get(`/posts/allPost?search=${search}&page=${page}`)
+      .then((res) => {
+        setPosts(res.data.result);
+        setLength(res.data.dataLength);
+      });
+  }, [axiosPublic, search, page]);
 
   const {
     register,
@@ -53,17 +83,19 @@ const Home = () => {
   } = useForm();
   const onSubmit = async (data) => {
     if (data?.search) {
-      axiosPublic.get(`/posts/allPost?search=${data?.search}`).then((res) => {
-        if (res?.data?.length === 0) {
-          Swal.fire(
-            "Opps!!!!",
-            "Please,Input The suggest Tag To Search",
-            "error"
-          );
-        }
-        setPosts(res.data);
-        reset();
-      });
+      axiosPublic
+        .get(`/posts/allPost?search=${data?.search}&page=${page}`)
+        .then((res) => {
+          if (res?.data?.length === 0) {
+            Swal.fire(
+              "Opps!!!!",
+              "Please,Input The suggest Tag To Search",
+              "error"
+            );
+          }
+          setPosts(res.data);
+          reset();
+        });
     }
   };
 
@@ -128,14 +160,18 @@ const Home = () => {
       <br />
       <br />
       <HeaderTittle heading={"All Posts"} tittle={"post"} />
-      <div className="flex justify-end gap-4 mb-6 mr-24">
+      <div className="flex justify-end gap-4 mb-6 mr-24 ">
         {sort ? (
           <AwesomeButton type="primary">
-            <span onClick={handleUpsort}>Sort by: Like <ThumbUpAltRoundedIcon /></span>
+            <span onClick={handleUpsort}>
+              Sort by: Like <ThumbUpAltRoundedIcon />
+            </span>
           </AwesomeButton>
         ) : (
           <AwesomeButton type="primary">
-            <span onClick={handleDownSort}>Sort by: Dislike <ThumbDownAltRoundedIcon /></span>
+            <span onClick={handleDownSort}>
+              Sort by: Dislike <ThumbDownAltRoundedIcon />
+            </span>
           </AwesomeButton>
         )}
         <AwesomeButton type="primary">
@@ -143,7 +179,7 @@ const Home = () => {
         </AwesomeButton>
       </div>
       {posts.length > 0 ? (
-        <div className="grid grid-cols-1  lg:w-[85rem] mx-auto gap-6 mb-10">
+        <div className="grid grid-cols-1  lg:w-[85rem] mx-auto gap-6 mb-10 ">
           {posts?.map((post) => (
             <div key={post._id}>
               <PostCard post={post}></PostCard>
@@ -160,8 +196,37 @@ const Home = () => {
           </h1>
         </div>
       )}
+      {/* //  <--------------- Work For Pagination-------------> */}
 
-      {/* <AllPosts posts={posts}></AllPosts> */}
+      <div className="pagination flex flex-wrap justify-center items-center my-20 min-h-40">
+        <button
+          onClick={handlePrevious}
+          className="btn bg-[#158CD7] text-white mr-1"
+        >
+          Previous
+        </button>
+        <div className="mx-1 inline">
+          {emptyArray?.map((pages) => (
+            <button
+              className={
+                pages == page
+                  ? "btn selected bg-[#2F0F00] text-white mx-2"
+                  : "btn bg-[#158CD7] text-white mx-2"
+              }
+              onClick={() => handlePageClick(pages)}
+              key={pages}
+            >
+              {pages}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={handleNext}
+          className="btn bg-[#158CD7] text-white mr-3 ml-1"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };

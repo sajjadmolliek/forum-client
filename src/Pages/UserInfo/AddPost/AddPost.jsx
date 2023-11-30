@@ -27,7 +27,6 @@ const AddPost = () => {
     formState: { errors },
   } = useForm();
 
-
   // Select Option Tags Data
   const { data: tags = [] } = useQuery({
     queryKey: ["getForSelectAllTags"],
