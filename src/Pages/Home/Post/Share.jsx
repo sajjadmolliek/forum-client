@@ -44,7 +44,7 @@ const Share = ({ id }) => {
                   <ListItem className="space-x-4 md:space-x-14 flex-wrap items-center justify-center" disablePadding>
                     <div>
                       <FacebookShareButton
-                        url={`http://localcxzhost:5007/post/${id}`}
+                        url={`https://forum-b8cea.web.app/post/${id}`}
                         className="Demo__some-network__share-button justify-center flex flex-col items-center"
                       >
                         <FacebookIcon size={32} round />
@@ -53,7 +53,7 @@ const Share = ({ id }) => {
                     </div>
                     <div>
                       <FacebookMessengerShareButton
-                        url={`http://localhczxczxost:5007/post/${id}`}
+                        url={`https://forum-b8cea.web.app/post/${id}`}
                         className="Demo__some-network__share-button justify-center flex flex-col items-center"
                       >
                         <FacebookMessengerIcon size={32} round />
@@ -62,7 +62,7 @@ const Share = ({ id }) => {
                     </div>
                     <div>
                       <WhatsappShareButton
-                        url={`https://forum-server-five.vercel.app/post/${id}`}
+                        url={`https://forum-b8cea.web.app/post/${id}`}
                         className="Demo__some-network__share-button justify-center flex flex-col items-center"
                       >
                         <WhatsappIcon size={32} round />
@@ -71,7 +71,7 @@ const Share = ({ id }) => {
                     </div>
                     <div>
                       <LinkedinShareButton
-                        url={`https://forum-server-five.vercel.app/post/${id}`}
+                        url={`https://forum-b8cea.web.app/post/${id}`}
                         className="Demo__some-network__share-button justify-center flex flex-col items-center"
                       >
                         <LinkedinIcon size={32} round />
@@ -80,7 +80,7 @@ const Share = ({ id }) => {
                     </div>
                     <div className="Demo__some-network justify-center flex flex-col items-center">
                       <TelegramShareButton
-                        url={`https://forum-server-five.vercel.app/post/${id}`}
+                        url={`https://forum-b8cea.web.app/post/${id}`}
                         title={"title"}
                         className="Demo__some-network__share-button"
                       >

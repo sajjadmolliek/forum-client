@@ -42,7 +42,6 @@ const Router = createBrowserRouter([
       {
         path: "/post/:id",
         element:<PostDetails/> ,
-        // loader:({params})=>fetch(`https://forum-server-five.vercel.app/details/${params?.id}`)
       },
       {
         path: "/login",
@@ -143,7 +142,6 @@ const Router = createBrowserRouter([
       {
         path: "/userProfile/commentDetails/:id",
         element:<CommentDetails/> ,
-        // loader:({params})=>fetch(`https://forum-server-five.vercel.app/details/${params?.id}`)
       },
     ],
   },

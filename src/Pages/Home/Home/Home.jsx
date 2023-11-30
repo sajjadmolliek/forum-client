@@ -84,16 +84,16 @@ const Home = () => {
   const onSubmit = async (data) => {
     if (data?.search) {
       axiosPublic
-        .get(`/posts/allPost?search=${data?.search}&page=${page}`)
-        .then((res) => {
-          if (res?.data?.length === 0) {
-            Swal.fire(
-              "Opps!!!!",
-              "Please,Input The suggest Tag To Search",
-              "error"
+      .get(`/posts/allPost?search=${data?.search}&page=${page}`)
+      .then((res) => {
+        if (res?.data?.length === 0) {
+          Swal.fire(
+            "Opps!!!!",
+            "Please,Input The suggest Tag To Search",
+            "error"
             );
           }
-          setPosts(res.data);
+          setPosts(res.data.result);
           reset();
         });
     }
